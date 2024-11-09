@@ -1,3 +1,16 @@
+/* SPDX-License-Identifier: GPL-2.0
+ * aw882xx_pid_2071_reg.h
+ *
+ * Copyright (c) 2020 AWINIC Technology CO., LTD
+ *
+ * Author: Nick Li <liweilei@awinic.com.cn>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ */
+
 #ifndef __AW882XX_PID_2071_REG_H__
 #define __AW882XX_PID_2071_REG_H__
 
@@ -2034,4 +2047,19 @@ const unsigned char aw_pid_2071_reg_access[AW_PID_2071_REG_MAX] = {
 #define AW_PID_2071_MONITOR_TEMP_SIGN_MASK	(~(1<<9))
 #define AW_PID_2071_MONITOR_TEMP_NEG_MASK	(0XFC00)
 
+/********************************************
+ * Dither
+ *******************************************/
+#define AW_PID_2071_DITHER_START_BIT	(13)
+#define AW_PID_2071_DITHER_BITS_LEN	(1)
+#define AW_PID_2071_DITHER_MASK	\
+	(~(((1<<AW_PID_2071_DITHER_BITS_LEN)-1) << AW_PID_2071_DITHER_START_BIT))
+
+#define AW_PID_2071_DITHER_DISABLE	(0)
+#define AW_PID_2071_DITHER_DISABLE_VALUE	\
+	(AW_PID_2071_DITHER_DISABLE << AW_PID_2071_DITHER_START_BIT)
+
+#define AW_PID_2071_DITHER_ENABLE	(1)
+#define AW_PID_2071_DITHER_ENABLE_VALUE	\
+	(AW_PID_2071_DITHER_ENABLE << AW_PID_2071_DITHER_START_BIT)
 #endif  /* #ifndef  __AW_PID_2071_REG_H__ */

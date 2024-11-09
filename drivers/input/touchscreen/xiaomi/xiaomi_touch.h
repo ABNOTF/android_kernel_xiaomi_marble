@@ -76,8 +76,20 @@ enum MODE_TYPE {
 	Touch_Nonui_Mode       		= 17,
 	Touch_Debug_Level      		= 18,
 	Touch_Power_Status     		= 19,
-	Touch_Mode_NUM         		= 20,
+	Touch_Fod_Longpress_Gesture,
+	Touch_Singletap_Gesture,
+	Touch_Mode_NUM,
 	THP_LOCK_SCAN_MODE      	= THP_CMD_BASE + 0,
+	THP_FOD_DOWNUP_CTL = THP_CMD_BASE + 1,
+	THP_SELF_CAP_SCAN = THP_CMD_BASE + 2,
+	THP_REPORT_POINT_SWITCH = THP_CMD_BASE + 3,
+	THP_HAL_INIT_READY = THP_CMD_BASE + 4,
+	THP_HAL_VSYNC_MODE = THP_CMD_BASE + 9,
+	THP_HAL_CHARGING_STATUS = THP_CMD_BASE + 10,
+	THP_HAL_REPORT_RATE = THP_CMD_BASE + 11,
+	THP_HAL_DISPLAY_FPS = THP_CMD_BASE + 12,
+	THP_KNOCK_FRAME_COUNT = THP_CMD_BASE + 13,
+	THP_HAL_FILM_SENSOR = THP_CMD_BASE + 15,
 };
 
 struct xiaomi_touch_interface {
@@ -128,6 +140,7 @@ struct xiaomi_touch {
 	struct mutex  palm_mutex;
 	struct mutex  prox_mutex;
 	struct mutex gesture_single_tap_mutex;
+	struct mutex gesture_double_tap_mutex;
 	struct mutex fod_press_status_mutex;
 	wait_queue_head_t 	wait_queue;
 };
@@ -193,6 +206,8 @@ extern int update_clicktouch_raw(void);
 extern void last_touch_events_collect(int slot, int state);
 
 extern int notify_gesture_single_tap(void);
+
+extern int notify_gesture_double_tap(void);
 
 extern int update_fod_press_status(int value);
 

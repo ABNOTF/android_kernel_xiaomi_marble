@@ -1,7 +1,25 @@
+/* SPDX-License-Identifier: GPL-2.0
+ * aw882xx_dsp.h
+ *
+ * Copyright (c) 2020 AWINIC Technology CO., LTD
+ *
+ * Author: Nick Li <liweilei@awinic.com.cn>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ */
+
 #ifndef __AW882XX_DSP_H__
 #define __AW882XX_DSP_H__
 
+/*#define AW_QCOM_PLATFORM*/
 #define AW_AUDIOREACH_PLATFORM
+
+/*#define AW_QCOM_ADM_MSG*/
+
+/*#define AW_ALGO_AUTH_DSP*/
 
 /*factor form 12bit(4096) to 1000*/
 #define AW_DSP_RE_TO_SHOW_RE(re)	(((re) * (1000)) >> (12))
@@ -13,6 +31,9 @@
 #define AW_RX_DEFAULT_TOPO_ID		(0x1000FF01)
 #define AW_TX_DEFAULT_PORT_ID		(0x1007)
 #define AW_RX_DEFAULT_PORT_ID		(0x1006)
+
+#define AW_DSP_MSG_VER			(0x10000000)
+#define AW_DSP_CHANNEL_DEFAULT_NUM	(1)
 
 enum aw_dsp_msg_type {
 	AW_DSP_MSG_TYPE_DATA = 0,
@@ -36,8 +57,25 @@ enum {
 #define AW_DSP_MSG_HDR_VER (1)
 typedef struct aw_msg_hdr aw_dsp_msg_t;
 
-int aw882xx_dsp_write_msg(struct aw_device *aw_dev, uint32_t msg_id, char *data_ptr, unsigned int data_size);
-int aw882xx_dsp_read_msg(struct aw_device *aw_dev, uint32_t msg_id, char *data_ptr, unsigned int data_size);
+enum {
+	DSP_MSG_TYPE_WRITE_CMD = 0,
+	DSP_MSG_TYPE_WRITE_DATA,
+	DSP_MSG_TYPE_READ_DATA,
+};
+
+typedef struct aw_msg_hdr_v_1_0_0_0 {
+	int32_t checksum;
+	int32_t version;
+	int32_t type;
+	int32_t params_id;
+	int32_t channel;
+	int32_t num;
+	int32_t data_size;
+	int32_t reseriver[3];
+} aw_msg_hdr_t;
+
+int aw882xx_dsp_read_dsp_msg(struct aw_device *aw_dev, uint32_t msg_id, char *data_ptr, unsigned int size);
+int aw882xx_dsp_write_dsp_msg(struct aw_device *aw_dev, uint32_t msg_id, char *data_ptr, unsigned int size);
 int aw882xx_dsp_write_cali_cfg(struct aw_device *aw_dev, char *data, unsigned int data_len);
 int aw882xx_dsp_read_cali_cfg(struct aw_device *aw_dev, char *data, unsigned int data_len);
 int aw882xx_dsp_noise_en(struct aw_device *aw_dev, bool is_noise);
@@ -64,6 +102,11 @@ int aw882xx_get_algo_version(struct aw_device *aw_dev, char *algo_ver_buf);
 void aw882xx_device_parse_topo_id_dt(struct aw_device *aw_dev);
 void aw882xx_device_parse_port_id_dt(struct aw_device *aw_dev);
 int aw882xx_dsp_set_mixer_en(struct aw_device *aw_dev, uint32_t mixer_en);
-
+#ifdef AW_ALGO_AUTH_DSP
+int aw882xx_dsp_read_algo_auth_data(struct aw_device *aw_dev,
+		char *data, unsigned int data_len);
+int aw882xx_dsp_write_algo_auth_data(struct aw_device *aw_dev,
+		char *data, unsigned int data_len);
+#endif
 #endif
 

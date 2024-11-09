@@ -1,7 +1,20 @@
+/* SPDX-License-Identifier: GPL-2.0
+ * aw882xx_pid_1852_reg.h
+ *
+ * Copyright (c) 2020 AWINIC Technology CO., LTD
+ *
+ * Author: Nick Li <liweilei@awinic.com.cn>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ */
+
 #ifndef __AW882XX_PID_1852_REG_H__
 #define __AW882XX_PID_1852_REG_H__
 
-#define AW_PID_1852_MONITOR_FILE 	"aw882xx_pid_1852_monitor.bin"
+#define AW_PID_1852_MONITOR_FILE	"aw882xx_pid_1852_monitor.bin"
 
 /* registers list */
 #define AW_PID_1852_ID_REG				(0x00)
@@ -1818,10 +1831,10 @@ static const unsigned char aw_pid_1852_reg_access[AW_PID_1852_REG_MAX] = {
 	(AW_PID_1852_VOUT_VFBSET_10P5V << AW_PID_1852_VOUT_VFBSET_START_BIT)
 
 /*
-#define AW_PID_1852_VOUT_VFBSET_10P5V	(3)
-#define AW_PID_1852_VOUT_VFBSET_10P5V_VALUE	\
-	(AW_PID_1852_VOUT_VFBSET_10P5V << AW_PID_1852_VOUT_VFBSET_START_BIT)
-*/
+ *#define AW_PID_1852_VOUT_VFBSET_10P5V	(3)
+ *#define AW_PID_1852_VOUT_VFBSET_10P5V_VALUE	\
+ *	(AW_PID_1852_VOUT_VFBSET_10P5V << AW_PID_1852_VOUT_VFBSET_START_BIT)
+ */
 
 #define AW_PID_1852_VOUT_VFBSET_DEFAULT_VALUE	(1)
 #define AW_PID_1852_VOUT_VFBSET_DEFAULT	\
@@ -1895,4 +1908,20 @@ static const unsigned char aw_pid_1852_reg_access[AW_PID_1852_REG_MAX] = {
 #define AW_PID_1852_MONITOR_INT_10BIT		(1023)
 #define AW_PID_1852_MONITOR_TEMP_SIGN_MASK		(~(1<<9))
 #define AW_PID_1852_MONITOR_TEMP_NEG_MASK		(0XFC00)
+/********************************************
+ * Dither
+ *******************************************/
+#define AW_PID_1852_DITHER_START_BIT	(7)
+#define AW_PID_1852_DITHER_BITS_LEN	(1)
+#define AW_PID_1852_DITHER_MASK	\
+	(~(((1<<AW_PID_1852_DITHER_BITS_LEN)-1) << AW_PID_1852_DITHER_START_BIT))
+
+#define AW_PID_1852_DITHER_DISABLE	(0)
+#define AW_PID_1852_DITHER_DISABLE_VALUE	\
+	(AW_PID_1852_DITHER_DISABLE << AW_PID_1852_DITHER_START_BIT)
+
+#define AW_PID_1852_DITHER_ENABLE	(1)
+#define AW_PID_1852_DITHER_ENABLE_VALUE	\
+	(AW_PID_1852_DITHER_ENABLE << AW_PID_1852_DITHER_START_BIT)
+
 #endif  /* #ifndef  __AW_PID_1852_REG_H__ */

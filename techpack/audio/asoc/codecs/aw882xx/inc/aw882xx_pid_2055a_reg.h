@@ -1,3 +1,16 @@
+/* SPDX-License-Identifier: GPL-2.0
+ * aw882xx_pid_2055a_reg.h
+ *
+ * Copyright (c) 2020 AWINIC Technology CO., LTD
+ *
+ * Author: Nick Li <liweilei@awinic.com.cn>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ */
+
 #ifndef __AW882XX_PID_2055A_REG_H__
 #define __AW882XX_PID_2055A_REG_H__
 
@@ -1352,10 +1365,10 @@ const unsigned char aw_pid_2055a_reg_access[AW_PID_2055A_REG_MAX] = {
 	(AW_PID_2055A_SLOT_NUM_TDM16S << AW_PID_2055A_SLOT_NUM_START_BIT)
 
 /*
-#define AW_PID_2055A_SLOT_NUM_TDM16S			(7)
-#define AW_PID_2055A_SLOT_NUM_TDM16S_VALUE		\
-	(AW_PID_2055A_SLOT_NUM_TDM16S << AW_PID_2055A_SLOT_NUM_START_BIT)
-*/
+ *#define AW_PID_2055A_SLOT_NUM_TDM16S			(7)
+ *#define AW_PID_2055A_SLOT_NUM_TDM16S_VALUE		\
+ *	(AW_PID_2055A_SLOT_NUM_TDM16S << AW_PID_2055A_SLOT_NUM_START_BIT)
+ */
 
 #define AW_PID_2055A_SLOT_NUM_DEFAULT_VALUE	(0)
 #define AW_PID_2055A_SLOT_NUM_DEFAULT			\
@@ -2029,5 +2042,21 @@ const unsigned char aw_pid_2055a_reg_access[AW_PID_2055A_REG_MAX] = {
  *******************************************/
 #define AW_PID_2055A_INIT_CHECK_REG		(0x73)
 #define AW_PID_2055A_INIT_CHECK_VALUE		(0x1D40)
+
+/********************************************
+ * Dither
+ *******************************************/
+#define AW_PID_2055A_DITHER_START_BIT	(14)
+#define AW_PID_2055A_DITHER_BITS_LEN	(1)
+#define AW_PID_2055A_DITHER_MASK	\
+	(~(((1<<AW_PID_2055A_DITHER_BITS_LEN)-1) << AW_PID_2055A_DITHER_START_BIT))
+
+#define AW_PID_2055A_DITHER_DISABLE	(0)
+#define AW_PID_2055A_DITHER_DISABLE_VALUE	\
+	(AW_PID_2055A_DITHER_DISABLE << AW_PID_2055A_DITHER_START_BIT)
+
+#define AW_PID_2055A_DITHER_ENABLE	(1)
+#define AW_PID_2055A_DITHER_ENABLE_VALUE	\
+	(AW_PID_2055A_DITHER_ENABLE << AW_PID_2055A_DITHER_START_BIT)
 
 #endif  /* #ifndef  __AW_PID_2055A_REG_H__ */
