@@ -1,0 +1,96 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build kernel
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    tags:
+      - '*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    name: Build kernel
+    runs-on: ubuntu-latest
+    container: quay.io/droidian/build-essential:current-amd64
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          ref: melt-rebase
+          
+      - name: Update repositories
+        run: |
+          apt update
+          apt install git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison build-essential dpkg-dev findutils android-platform-prebuilts-python-linux-x86-2.7.5 bc rsync kmod cpio bison flex libssl-dev  avbtool binutils-aarch64-linux-gnu clang-android-12.0-r416183b gcc-4.9-aarch64-linux-android g++-4.9-aarch64-linux-android libgcc-4.9-dev-aarch64-linux-android-cross lz4 -y
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r536225.tar.gz -O /clang.tar.gz
+          mkdir /clang
+          tar -xvf /clang.tar.gz -C /clang
+          
+      - name: Build kernel
+        run: |
+          export PATH=/clang/bin:/opt/android/prebuilts/python/2.7.5/bin:$PATH
+          make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=out marble_lxc_defconfig
+          make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=out -j$(nproc --all)
+          
+      - name: Move kernel to out directory
+        run: |
+          mkdir /out
+          cp ./out/arch/arm64/boot/Image /out/
+          ls /out
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-kernel
+          path: /out/*
+          if-no-files-found: error
+          retention-days: 1
+
+  prepare:
+    runs-on: ubuntu-20.04
+    name: Create GitHub release
+    needs: build
+
+    steps:
+      - name: Delete old latest release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
+        with:
+          delete_release: true # default: false
+          tag_name: latest # tag name to delete
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag latest
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: latest
+
+  publish:
+    runs-on: ubuntu-20.04
+    needs: prepare
+
+    name: Publish linux-kernel
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: out
+
+      - name: Create latest release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: out/linux-kernel/*
+          tag_name: latest
+          draft: false
+          prerelease: false
